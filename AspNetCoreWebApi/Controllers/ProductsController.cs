@@ -1,6 +1,7 @@
 ﻿using AspNetCoreWebApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreWebApi.Controllers
 {
@@ -16,9 +17,24 @@ namespace AspNetCoreWebApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Product> GetAllProducts()
+        public async Task <ActionResult> GetAllProducts()
         {
-            return _context.Products.ToArray(); 
+            return Ok(await _context.Products.ToArrayAsync()); 
         }
+
+        [HttpGet("{id}")]
+        public async Task <ActionResult> GetProduct(int id)
+        {
+            var product =await  _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(product);
+            }
+        }
+
     }
 }
