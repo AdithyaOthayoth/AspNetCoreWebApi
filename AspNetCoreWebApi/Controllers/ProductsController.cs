@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace AspNetCoreWebApi.Controllers
 {
@@ -41,5 +42,23 @@ namespace AspNetCoreWebApi.Controllers
         {
             return await _context.Products.Where(p => p.IsAvailable).ToArrayAsync();
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> PostProduct(Product product)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetProduct),
+                new { id = product.Id },
+                product);
+        }
+
     }
 }
