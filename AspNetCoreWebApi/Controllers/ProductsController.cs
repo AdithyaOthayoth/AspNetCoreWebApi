@@ -36,5 +36,10 @@ namespace AspNetCoreWebApi.Controllers
             }
         }
 
+        [HttpGet("available")]
+        public async Task <ActionResult<IEnumerable<Product>>> GetAvailableProduct()
+        {
+            return await _context.Products.Where(p => p.IsAvailable).ToArrayAsync();
+        }
     }
 }
